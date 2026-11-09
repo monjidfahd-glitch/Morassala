@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1f6f4a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>مراسلة الأولياء</title>
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+<style>
+/* لوحة اختيار نوع الرسالة أعلى الصفحة، ثم شرائح الأقسام، ثم بطاقات التلاميذ مع أزرار الإرسال */
+:root{
+--bg:#f3f5f1;--card:#ffffff;--ink:#1b211d;--mut:#5f6b63;--line:#d7ddd5;
+--acc:#1f6f4a;--accink:#ffffff;--hi:#b3261e;--hibg:#fbe9e7;--mid:#9a5b00;--midbg:#fdf1dc;--lo:#3c5a46;--lobg:#e6efe8;
+--f-head:"Noto Kufi Arabic",Tahoma,"Segoe UI",sans-serif;--f-body:"Noto Naskh Arabic",Tahoma,"Segoe UI",serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141815;--card:#1e2420;--ink:#eef2ec;--mut:#a3ada6;--line:#36403a;--acc:#53c08a;--accink:#0b1a11;--hi:#ff8a80;--hibg:#3a1d1b;--mid:#f2b45a;--midbg:#3a2c14;--lo:#a9d4b6;--lobg:#20322a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141815;--card:#1e2420;--ink:#eef2ec;--mut:#a3ada6;--line:#36403a;--acc:#53c08a;--accink:#0b1a11;--hi:#ff8a80;--hibg:#3a1d1b;--mid:#f2b45a;--midbg:#3a2c14;--lo:#a9d4b6;--lobg:#20322a;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:500 16px/1.75 var(--f-body)}
+main{max-width:620px;margin:0 auto;padding-block:14px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{display:grid;gap:2px;margin-bottom:12px}
+.eyebrow{font:600 12px/1.4 var(--f-head);color:var(--mut);letter-spacing:.02em}
+h1{font:700 20px/1.4 var(--f-head);margin:0;text-wrap:balance}
+.sum{display:flex;gap:14px;flex-wrap:wrap;color:var(--mut);font-size:14px}
+.sum b{color:var(--ink);font-variant-numeric:tabular-nums}
+
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:10px;margin-bottom:12px}
+.lbl{font:600 13px/1.4 var(--f-head);color:var(--mut)}
+.types{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.types button{font:600 13px/1.45 var(--f-head);padding:10px 6px;border-radius:10px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;min-width:0}
+.types button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:var(--accink)}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{flex:1;font:600 13px/1.3 var(--f-head);padding:9px 8px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--acc);color:var(--acc);background:var(--lobg)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fields .full{grid-column:1/-1}
+.f{display:grid;gap:3px;min-width:0}
+.f label{font:600 12px/1.4 var(--f-head);color:var(--mut)}
+.f input,.f select,.f textarea{width:100%;font:500 15px/1.5 var(--f-body);padding:8px 10px;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.f textarea{min-height:64px;resize:vertical}
+
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+.chips button{font:600 13px/1 var(--f-head);padding:9px 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:var(--accink)}
+.filters{display:grid;grid-template-columns:1fr 1.4fr;gap:8px;margin-bottom:12px}
+.filters .f select,.filters .f input{width:100%;font:500 15px/1.5 var(--f-body);padding:8px 10px;border-radius:9px;border:1.5px solid var(--line);background:var(--card);color:var(--ink)}
+.edit{display:flex;gap:8px;flex-wrap:wrap;align-items:end;margin-top:8px}
+.edit .f{flex:1;min-width:120px}
+.edit input{width:100%;font:500 15px/1.4 var(--f-body);padding:7px 9px;border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.hrs.none{background:transparent;color:var(--mut);border:1px dashed var(--line)}
+.search{width:100%;font:500 15px/1.5 var(--f-body);padding:9px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);margin-bottom:12px}
+ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+li.st{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;align-items:center}
+li.st.done{opacity:.55}
+.rk{font:600 13px var(--f-head);color:var(--mut);font-variant-numeric:tabular-nums;min-width:22px;text-align:center}
+.who{min-width:0}
+.nm{font:700 17px/1.45 var(--f-body);display:block}
+.meta{font-size:13px;color:var(--mut)}
+.meta span[dir]{unicode-bidi:isolate}
+.hrs{font:700 15px/1 var(--f-head);padding:8px 10px;border-radius:10px;text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hrs small{display:block;font-size:11px;font-weight:600;margin-top:3px}
+.h3{background:var(--hibg);color:var(--hi)}.h2{background:var(--midbg);color:var(--mid)}.h1{background:var(--lobg);color:var(--lo)}
+.act{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.act a,.act button{flex:1;min-width:110px;text-align:center;font:600 14px/1 var(--f-head);padding:11px 8px;border-radius:10px;text-decoration:none;cursor:pointer;border:1.5px solid var(--line);background:transparent;color:var(--ink)}
+.act a.wa{background:var(--acc);border-color:var(--acc);color:var(--accink)}
+.act a:focus-visible,.act button:focus-visible,.chips button:focus-visible,.types button:focus-visible,.seg button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.nophone{grid-column:1/-1;font-size:13px;color:var(--hi)}
+details{grid-column:1/-1}
+details summary{font-size:13px;color:var(--mut);cursor:pointer}
+details pre{white-space:pre-wrap;font:500 14px/1.7 var(--f-body);background:var(--bg);border-radius:8px;padding:10px;margin:6px 0 0}
+.imp{max-width:620px;margin:40px auto;padding:20px}
+.imp h1{margin-bottom:6px}
+.pick{display:block;text-align:center;font:700 16px/1 var(--f-head);padding:15px;border-radius:12px;background:var(--acc);color:var(--accink);cursor:pointer}
+.err{color:var(--hi);font-size:14px}
+.linkbtn{background:none;border:0;padding:0;color:var(--acc);font:600 13px var(--f-head);text-decoration:underline;cursor:pointer}
+.note{margin-top:18px;font-size:13px;color:var(--mut);line-height:1.7}
+@media (max-width:380px){.fields{grid-template-columns:1fr}}
+</style>
+
+</head>
+<body>
+<main>
+<header>
+ <span class="eyebrow">ثانوية جابر بن حيان · الحراسة العامة</span>
+ <h1 id="ttl">مراسلة أولياء التلاميذ</h1>
+ <div class="sum"><span id="per">الفترة: <b>01/10/2026 – 04/11/2026</b></span><span>العدد: <b id="n"></b></span></div>
+</header>
+
+<section class="panel" aria-label="نوع الرسالة">
+ <span class="lbl">نوع الرسالة</span>
+ <div class="types" id="types" role="group">
+  <button type="button" data-t="abs">الغياب أو التأخر</button>
+  <button type="button" data-t="work">عدم الإنجاز أو عدم إحضار المقرر</button>
+  <button type="button" data-t="beh">سلوك غير تربوي</button>
+ </div>
+
+ <div id="opt-abs" class="fields">
+  <div class="seg full" id="sub-abs" role="group">
+   <button type="button" data-s="ghiyab">إخبار بالغياب</button>
+   <button type="button" data-s="ta2akhor">إخبار بالتأخر</button>
+  </div>
+  <div class="f" id="wrap-from"><label for="from">من</label><input id="from" type="date" value="2026-10-01"></div>
+  <div class="f" id="wrap-to"><label for="to">إلى</label><input id="to" type="date" value="2026-11-04"></div>
+  <div class="f full" id="wrap-late" hidden><label for="late">عدد مرات التأخر</label><input id="late" type="number" min="1" inputmode="numeric" placeholder="مثلا: 3"></div>
+ </div>
+
+ <div id="opt-work" class="fields" hidden>
+  <div class="seg full" id="sub-work" role="group">
+   <button type="button" data-s="injaz">عدم إنجاز المطلوب</button>
+   <button type="button" data-s="moqarrar">عدم إحضار المقرر</button>
+  </div>
+ </div>
+
+ <div id="opt-common" class="fields" hidden>
+  <div class="f"><label for="subj">المادة</label><select id="subj"></select></div>
+  <div class="f"><label for="day">التاريخ</label><input id="day" type="date"></div>
+  <div class="f full" id="wrap-other" hidden><label for="other">اسم المادة</label><input id="other" type="text" placeholder="اكتب اسم المادة"></div>
+  <div class="f full" id="wrap-desc" hidden><label for="desc">وصف مختصر للسلوك (اختياري)</label><textarea id="desc" placeholder="مثلا: الإخلال بالاحترام الواجب للأستاذ(ة) أثناء الحصة"></textarea></div>
+ </div>
+</section>
+
+<div class="filters"><div class="f"><label for="cls">القسم</label><select id="cls"></select></div><div class="f"><label for="q">بحث في كل الأقسام</label><input id="q" type="search" placeholder="اسم التلميذ…"></div></div>
+<ol id="list"></ol>
+<p class="note">اختر نوع الرسالة، ثم القسم أو ابحث بالاسم، واضغط «واتساب» عند التلميذ المعني. إذا لم يكن للولي رقم، افتح «رقم الولي وعدد الساعات» تحت اسم التلميذ وأضف الرقم، فيُحفظ على هذا الجهاز. بدون رقم يُفتح واتساب بالرسالة وتختار جهة الاتصال بنفسك.<br>اللائحة تضم جميع تلاميذ الثانوية من ملف لوائح التلاميذ. أرقام الأولياء وساعات الغياب (1 أكتوبر – 4 نونبر 2026) متوفرة حاليا للتلاميذ الذين تجاوز غيابهم 9 ساعات. علامة «تم الإرسال» تُحفظ لكل نوع رسالة على حدة.</p>
+<p class="note"><button type="button" id="reimp" class="linkbtn">تحديث لائحة التلاميذ من ملف جديد</button></p>
+</main>
+<section id="imp" class="panel imp" hidden>
+ <h1>مراسلة أولياء التلاميذ</h1>
+ <p>لاستعمال التطبيق أول مرة، اختر ملف لائحة التلاميذ «لائحة_التلاميذ.json» الموجود في هاتفك. تبقى اللائحة محفوظة في هذا الهاتف فقط، ولا تحتاج إلى الإنترنت بعد ذلك.</p>
+ <label class="pick" for="file">اختيار ملف اللائحة</label>
+ <input id="file" type="file" accept=".json,application/json" hidden>
+ <p id="imperr" class="err"></p>
+</section>
+
+<script>
+// [الاسم، القسم، الجنس m/f، الولي، الهاتف، ساعات الغياب]
+let S=[];try{S=JSON.parse(localStorage.getItem("students")||"[]")}catch(e){}
+(function(){const imp=document.getElementById("imp"),fi=document.getElementById("file"),er=document.getElementById("imperr");
+ if(!S.length){document.querySelector("main").hidden=true;imp.hidden=false}
+ fi.onchange=()=>{const f=fi.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d)||!d.length||!Array.isArray(d[0]))throw 0;localStorage.setItem("students",JSON.stringify(d));location.reload()}catch(e){er.textContent="هذا الملف ليس ملف اللائحة الصحيح. اختر الملف «لائحة_التلاميذ.json»."}};r.readAsText(f)};
+ document.getElementById("reimp").onclick=()=>{document.querySelector("main").hidden=true;imp.hidden=false;window.scrollTo(0,0)};
+})();
+const SUBJ=["اللغة العربية","اللغة الفرنسية","اللغة الإنجليزية","التربية الإسلامية","الاجتماعيات (التاريخ والجغرافيا)","الفلسفة","الرياضيات","الفيزياء والكيمياء","علوم الحياة والأرض","علوم المهندس","المعلوميات","الاقتصاد والتنظيم الإداري للمقاولات","المحاسبة والرياضيات المالية","الاقتصاد العام والإحصاء","التربية البدنية","أخرى"];
+const $=id=>document.getElementById(id);
+const ok=p=>/^0[67]\d{8}$/.test(p||"");
+const today=new Date().toISOString().slice(0,10);
+const fmt=d=>{if(!d)return "……";const[y,m,x]=d.split("-");return x+"/"+m+"/"+y};
+const id=r=>r[1]+"|"+r[0];
+
+let st={t:"abs",abs:"ghiyab",work:"injaz",from:"2026-10-01",to:"2026-11-04",late:"",subj:SUBJ[0],other:"",day:today,desc:"",cls:"TCT-1"};
+try{Object.assign(st,JSON.parse(localStorage.getItem("cfg")||"{}"));st.day=st.day||today}catch(e){}
+let done={};try{done=JSON.parse(localStorage.getItem("sent")||"{}")}catch(e){}
+let ed={};try{ed=JSON.parse(localStorage.getItem("edits")||"{}")}catch(e){}
+const save=()=>{try{localStorage.setItem("sent",JSON.stringify(done));localStorage.setItem("cfg",JSON.stringify(st));localStorage.setItem("edits",JSON.stringify(ed))}catch(e){}};
+const phone=r=>((ed[id(r)]||{}).p||r[4]||"").replace(/\s|-/g,"");
+const hours=r=>{const h=(ed[id(r)]||{}).h;return h!=null&&h!==""?+h:r[5]};
+
+SUBJ.forEach(s=>{const o=document.createElement("option");o.value=o.textContent=s;$("subj").appendChild(o)});
+const NW="بدون رقم واتساب";
+const CL=["الكل",...new Set(S.map(r=>r[1])),NW];
+CL.forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c==="الكل"?"كل الأقسام":c;$("cls").appendChild(o)});
+if(!CL.includes(st.cls))st.cls="TCT-1";
+
+const SIGN="الحراسة العامة – ثانوية جابر بن حيان";
+function subj(){return st.subj==="أخرى"?(st.other.trim()||"……"):st.subj}
+function msg(r){
+ const f=r[2]==="f",w=(m,x)=>f?x:m,kid=w("ابنكم","ابنتكم"),h=w("ه","ها");
+ let b;
+ if(st.t==="abs"&&st.abs==="ghiyab"){
+  const n=hours(r);
+  b="نخبركم بأنّ "+kid+" "+w("تغيّب","تغيّبت")+" خلال الفترة الممتدة بين "+fmt(st.from)+" و "+fmt(st.to)+" عمّا مجموعه "+(n?n:"……")+" ساعة دراسية.\nنرجو منكم الحرص على انضباط "+kid+" في حضور الحصص الدراسية، علمًا بأنّ تكرار الغياب قد يترتب عنه اتخاذ إجراءات وفق النظام الداخلي للمؤسسة.";
+ }else if(st.t==="abs"){
+  b="نخبركم بأنّ "+kid+" "+w("تأخّر","تأخّرت")+" عن الالتحاق بالحصص الدراسية "+(st.late?st.late+" مرة":"عدة مرات")+" خلال الفترة الممتدة بين "+fmt(st.from)+" و "+fmt(st.to)+".\nنرجو منكم الحرص على احترام "+kid+" لمواعيد الدخول، علمًا بأنّ تكرار التأخر قد يترتب عنه اتخاذ إجراءات وفق النظام الداخلي للمؤسسة.";
+ }else if(st.t==="work"&&st.work==="injaz"){
+  b="نخبركم بأنّ "+kid+" "+w("لم يُنجز","لم تُنجز")+" العمل المطلوب في مادة "+subj()+" بتاريخ "+fmt(st.day)+".\nنرجو منكم تتبّع واجبات"+h+" المدرسية وحثّ"+h+" على إنجاز ما يُطلب من"+h+" في وقته، لما لذلك من أثر على تحصيل"+h+" ونتائج"+h+".";
+ }else if(st.t==="work"){
+  b="نخبركم بأنّ "+kid+" "+w("لم يُحضر","لم تُحضر")+" الكتاب المدرسي (المقرر) الخاص بمادة "+subj()+" بتاريخ "+fmt(st.day)+".\nنرجو منكم الحرص على إحضار"+h+" للأدوات والمقررات الدراسية في كل حصة، لأن ذلك ضروري لمتابعة الدرس والمشاركة فيه.";
+ }else{
+  b="نخبركم بأنّ "+kid+" صدر عن"+h+" سلوك غير تربوي تجاه أستاذ(ة) مادة "+subj()+" بتاريخ "+fmt(st.day)+(st.desc.trim()?"، تمثّل في: "+st.desc.trim():"")+".\nلذا نرجو منكم الحضور إلى المؤسسة في أقرب وقت للتواصل مع الإدارة في الموضوع، علمًا بأنّ هذا السلوك يخالف النظام الداخلي للمؤسسة وقد يترتب عنه اتخاذ الإجراءات التأديبية اللازمة.";
+ }
+ return "السلام عليكم ورحمة الله وبركاته،\n"+(r[3]?"السيد(ة): "+r[3]+"\n":"")+"ولي أمر "+w("التلميذ","التلميذة")+": "+r[0]+"\nالقسم: "+r[1]+"\nتحية طيبة وبعد،\n"+b+"\nوشكرًا على تعاونكم.\n"+SIGN;
+}
+const TTL={abs:{ghiyab:"إخبار الأولياء بالغياب",ta2akhor:"إخبار الأولياء بالتأخر"},work:{injaz:"إخبار بعدم إنجاز المطلوب",moqarrar:"إخبار بعدم إحضار المقرر"},beh:"إخبار بسلوك غير تربوي"};
+const kind=()=>st.t+"-"+(st.t==="abs"?st.abs:st.t==="work"?st.work:"x")+(st.t==="abs"?"":"-"+subj()+"-"+st.day);
+
+function sync(){
+ [...$("types").children].forEach(b=>b.setAttribute("aria-pressed",b.dataset.t===st.t));
+ [...$("sub-abs").children].forEach(b=>b.setAttribute("aria-pressed",b.dataset.s===st.abs));
+ [...$("sub-work").children].forEach(b=>b.setAttribute("aria-pressed",b.dataset.s===st.work));
+ $("opt-abs").hidden=st.t!=="abs";$("opt-work").hidden=st.t!=="work";$("opt-common").hidden=st.t==="abs";
+ $("wrap-late").hidden=st.abs!=="ta2akhor";$("wrap-other").hidden=st.subj!=="أخرى";$("wrap-desc").hidden=st.t!=="beh";
+ $("from").value=st.from;$("to").value=st.to;$("late").value=st.late;$("subj").value=st.subj;$("other").value=st.other;$("day").value=st.day;$("desc").value=st.desc;$("cls").value=st.cls;
+ $("ttl").textContent=st.t==="beh"?TTL.beh:TTL[st.t][st[st.t]];
+ $("per").hidden=st.t!=="abs";
+}
+$("types").onclick=e=>{const b=e.target.closest("button");if(!b)return;st.t=b.dataset.t;save();sync();render()};
+$("sub-abs").onclick=e=>{const b=e.target.closest("button");if(!b)return;st.abs=b.dataset.s;save();sync();render()};
+$("sub-work").onclick=e=>{const b=e.target.closest("button");if(!b)return;st.work=b.dataset.s;save();sync();render()};
+["from","to","late","subj","other","day","desc","cls"].forEach(k=>{$(k).addEventListener("input",()=>{st[k]=$(k).value;save();sync();render()})});
+$("q").addEventListener("input",render);
+
+function el(t,c,txt){const e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e}
+const nz=s=>s.replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي").replace(/\s+/g,"");
+function render(){
+ const L=$("list");L.innerHTML="";const q=nz($("q").value.trim());
+ let rows=q?S.filter(r=>nz(r[0]).includes(q)||nz(r[3]).includes(q)):S.filter(r=>st.cls==="الكل"||r[1]===st.cls||(st.cls===NW&&!ok(phone(r))));
+ if(st.t==="abs"&&st.abs==="ghiyab")rows=[...rows].sort((a,b)=>(hours(b)||0)-(hours(a)||0));
+ $("n").textContent=rows.length+" تلميذا";
+ const K=kind();
+ rows.forEach((r,i)=>{
+  const key=(K==="abs-ghiyab"?"":K+"|")+r[1]+"|"+r[0],li=el("li","st"+(done[key]?" done":"")),p=phone(r),hh=hours(r);
+  li.appendChild(el("span","rk",i+1));
+  const w=el("div","who");w.appendChild(el("span","nm",r[0]));
+  const m=el("div","meta");const c=el("span",null,r[1]);c.dir="ltr";m.append(c," · الولي: "+(r[3]||"—")+" · ");const ph=el("span",null,p||"بدون رقم");ph.dir="ltr";m.appendChild(ph);w.appendChild(m);li.appendChild(w);
+  const h=el("div","hrs "+(!hh?"none":hh>=40?"h3":hh>=20?"h2":"h1"),hh||"—");h.appendChild(el("small",null,"ساعة غياب"));li.appendChild(h);
+  const a=el("div","act");
+  const wa=el("a","wa","واتساب");wa.href="https://wa.me/"+(ok(p)?"212"+p.slice(1):"")+"?text="+encodeURIComponent(msg(r));wa.target="_blank";wa.rel="noopener";a.appendChild(wa);
+  if(ok(p)){const tl=el("a",null,"اتصال");tl.href="tel:"+p;a.appendChild(tl)}
+  else li.appendChild(el("div","nophone",p?"الرقم ("+p+") غير صالح: صحّحه في «رقم الولي» أو اختر جهة الاتصال في واتساب.":"لا يوجد رقم للولي: أضفه في «رقم الولي» أو اختر جهة الاتصال في واتساب."));
+  const cp=el("button",null,"نسخ الرسالة");cp.type="button";cp.onclick=async()=>{try{await navigator.clipboard.writeText(msg(r))}catch(e){const t=document.createElement("textarea");t.value=msg(r);document.body.appendChild(t);t.select();document.execCommand("copy");t.remove()}cp.textContent="تم النسخ ✓";setTimeout(()=>cp.textContent="نسخ الرسالة",1500)};
+  const dn=el("button",null,done[key]?"↺ إلغاء التعليم":"✓ تم الإرسال");dn.type="button";dn.onclick=()=>{if(done[key])delete done[key];else done[key]=1;save();render()};
+  a.append(cp,dn);li.appendChild(a);
+  const d=el("details");d.appendChild(el("summary",null,"رقم الولي وعدد الساعات · نص الرسالة"));
+  const e=el("div","edit");
+  const mk=(lab,k,val,ph,ty)=>{const f=el("div","f"),i=el("input");i.id="e"+k+S.indexOf(r);const l=el("label",null,lab);l.htmlFor=i.id;i.type=ty;i.value=val;i.placeholder=ph;i.dir="ltr";i.inputMode="numeric";
+   i.onchange=()=>{const o=ed[id(r)]||{};o[k]=i.value.trim();if(!o.p&&(o.h==null||o.h===""))delete ed[id(r)];else ed[id(r)]=o;save();render()};f.append(l,i);return f};
+  e.append(mk("رقم الولي","p",(ed[id(r)]||{}).p||r[4]||"","06xxxxxxxx","tel"),mk("ساعات الغياب","h",(ed[id(r)]||{}).h??(r[5]||""),"0","number"));
+  d.appendChild(e);d.appendChild(el("pre",null,msg(r)));li.appendChild(d);
+  L.appendChild(li);
+ });
+}
+sync();render();
+
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+
+</body>
+</html>
